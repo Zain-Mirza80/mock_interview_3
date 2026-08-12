@@ -4,9 +4,10 @@ import { StatusBadge } from './StatusBadge'
 interface CallCardProps {
   call: OutboundCall
   onStatusChange: (id: number, status: CallStatus) => void
+  onRetry: (id: number) => void
 }
 
-export function CallCard({ call, onStatusChange }: CallCardProps) {
+export function CallCard({ call, onStatusChange, onRetry }: CallCardProps) {
   return (
     <article className="card">
       <div className="card-header">
@@ -33,6 +34,9 @@ export function CallCard({ call, onStatusChange }: CallCardProps) {
             <button onClick={() => onStatusChange(call.id, 'completed')}>Mark complete</button>
             <button className="secondary" onClick={() => onStatusChange(call.id, 'failed')}>Mark failed</button>
           </>
+        )}
+        {call.status === 'failed' && (
+          <button onClick={() => onRetry(call.id)}>Retry call</button>
         )}
       </div>
     </article>

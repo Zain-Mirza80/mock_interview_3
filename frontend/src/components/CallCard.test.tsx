@@ -14,7 +14,7 @@ const failedCall = {
 
 describe('CallCard', () => {
   it('shows failed call details', () => {
-    render(<CallCard call={failedCall} onStatusChange={vi.fn()} />)
+    render(<CallCard call={failedCall} onStatusChange={vi.fn()} onRetry={vi.fn()} />)
 
     expect(screen.getByText('Patient Beta')).toBeTruthy()
     expect(screen.getByText(/Telephony provider timeout/)).toBeTruthy()

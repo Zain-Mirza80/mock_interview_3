@@ -23,3 +23,13 @@ export async function updateCall(id: number, update: OutboundCallUpdate): Promis
 
   return response.json()
 }
+
+export async function retryCall(id: number): Promise<OutboundCall> {
+  const response = await fetch(`${API_BASE}/calls/${id}/retry`, { method: 'POST' })
+
+  if (!response.ok) {
+    throw new Error('Could not retry call')
+  }
+
+  return response.json()
+}

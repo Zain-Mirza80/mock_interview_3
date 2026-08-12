@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { fetchCalls, updateCall } from './api'
+import { fetchCalls, retryCall, updateCall } from './api'
 import { CallCard } from './components/CallCard'
 import type { CallStatus, OutboundCall } from './types'
 import './styles.css'
@@ -19,6 +19,11 @@ export default function App() {
   async function handleStatusChange(id: number, status: CallStatus) {
     const updated = await updateCall(id, { status })
     setCalls((current) => current.map((call) => (call.id === id ? updated : call)))
+  }
+
+  async function handleRetry(id: number) {
+    const updated = await retryCall(id)
+    setCalls((current) => current.map((c) => (c.id === id ? updated : c)))
   }
 
   if (loading) {
@@ -48,7 +53,7 @@ export default function App() {
 
       <section className="grid">
         {calls.map((call) => (
-          <CallCard key={call.id} call={call} onStatusChange={handleStatusChange} />
+          <CallCard key={call.id} call={call} onStatusChange={handleStatusChange} onRetry={handleRetry} />
         ))}
       </section>
     </main>

@@ -1,4 +1,4 @@
-from .models import OutboundCall, OutboundCallCreate, OutboundCallUpdate
+from .models import CallStatus, OutboundCall, OutboundCallCreate, OutboundCallUpdate
 
 _calls: dict[int, OutboundCall] = {
     1: OutboundCall(
@@ -60,5 +60,19 @@ def update_call(call_id: int, data: OutboundCallUpdate) -> OutboundCall | None:
         return None
 
     updated = existing.model_copy(update=data.model_dump(exclude_unset=True))
+    _calls[call_id] = updated
+    return updated
+
+
+def retry_call(call_id: int) -> OutboundCall | None:
+    existing = _calls.get(call_id)
+    if existing is None:
+        return None
+
+    updated = existing.model_copy(update={
+        "status": CallStatus.scheduled,
+        "attempts": existing.attempts + 1,
+        "last_error": None,
+    })
     _calls[call_id] = updated
     return updated
